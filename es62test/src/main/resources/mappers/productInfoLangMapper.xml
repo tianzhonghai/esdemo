@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fosun.domain.ProductInfoLangMapper">
+    <resultMap id="BaseResultMap" type="com.fosun.domain.ProductInfoLangEntity">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="fk_productinfo" jdbcType="INTEGER" property="fk_productinfo" />
+        <result column="lang" jdbcType="VARCHAR" property="lang" />
+        <result column="subtitle" jdbcType="VARCHAR" property="subtitle" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, subtitle
+    </sql>
+    <select id="selectAll" resultMap="BaseResultMap">
+SELECT A.fk_product AS id,B.subtitle FROM `productinfo` A JOIN  productinfo_lang B
+ON A.id = B.fk_productinfo AND B.lang = 'CHS' AND B.IsValid = 1
+where A.typepublish = 1
+
+    </select>
+
+</mapper>

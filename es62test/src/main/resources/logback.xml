@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Logback configuration. See http://logback.qos.ch/manual/index.html -->
+<configuration scan="true" scanPeriod="10 seconds">
+    <property name="queueSize" value="1024"/>
+    <property name="LOG_PATH" value="/logs/estest/"/>
+    <property name="level" value="info" />
+    <include resource="org/springframework/boot/logging/logback/base.xml" />
+    <!--<include resource="org/springframework/boot/logging/logback/defaults.xml" />-->
+
+    <appender name="DEFAULT_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_PATH}/default.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/default-%d{yyyyMMdd}.log.%i</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>500MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>2</maxHistory>
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%msg%n
+            </Pattern>
+        </layout>
+    </appender>
+
+    <appender name="ERROR_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <File>${LOG_PATH}/error.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/error-%d{yyyyMMdd}.log.%i
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>500MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>2</maxHistory>
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%msg%n
+
+            </Pattern>
+        </layout>
+    </appender>
+
+    <appender name="ASYNC-DEFAULT-APPENDER" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>${queueSize}</queueSize>
+        <appender-ref ref="DEFAULT_APPENDER"/>
+    </appender>
+
+    <appender name="ASYNC-ERROR-APPENDER" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>${queueSize}</queueSize>
+        <appender-ref ref="ERROR_APPENDER"/>
+    </appender>
+
+    <!--  <logger name="" additivity="false">
+         <level value="${level}" />
+         <appender-ref ref="ASYNC-BIZ-APPENDER" />
+     </logger> -->
+
+    <root level="${level}">
+        <appender-ref ref="ASYNC-DEFAULT-APPENDER" />
+        <appender-ref ref="ASYNC-ERROR-APPENDER" />
+    </root>
+</configuration>
